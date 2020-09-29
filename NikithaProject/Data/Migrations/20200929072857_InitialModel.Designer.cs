@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NikithaProject.Data;
 
 namespace NikithaProject.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200929072857_InitialModel")]
+    partial class InitialModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -267,14 +269,6 @@ namespace NikithaProject.Data.Migrations
                             ImageName = "Donut.jpg",
                             Name = "Donut",
                             Price = 25.5f
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Description = "Spicy vegetarian Puff",
-                            ImageName = "VegPuffs.jpg",
-                            Name = "Veg Puff",
-                            Price = 20f
                         });
                 });
 

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NikithaProject.Data;
 using NikithaProject.Models;
@@ -50,6 +51,73 @@ namespace NikithaProject.Controllers
 
             _productRepository.AddNewProduct(prd);
             return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet]
+        public IActionResult EditProduct(int? id)
+        {
+            if(id==null)
+            {
+                return BadRequest();
+            }
+            var product = _productRepository.GetProductById(id.Value);
+            if(product == null)
+            {
+                return NotFound();
+            }
+            EditProductViewModel editProduct = new EditProductViewModel()
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Price = product.Price,
+                Description = product.Description,
+                ExistingImageName = product.ImageName
+            };
+            return View(editProduct);
+        }
+
+        [HttpPost]
+        public IActionResult EditProduct(EditProductViewModel editProduct)
+        {
+            Product product = new Product();
+            if (editProduct.ImageName == null)
+            {
+                if (editProduct.ExistingImageName != null)
+                {
+                    product.ImageName = editProduct.ExistingImageName;
+                }
+            }
+            else
+            {
+                product.ImageName = editProduct.ImageName.FileName;
+            }
+
+            product.Id = editProduct.Id;
+            product.Name = editProduct.Name;
+            product.Description = editProduct.Description;
+            product.Price = editProduct.Price;
+
+            int result = _productRepository.EditProduct(product);
+
+            if (result > 0 && editProduct.ImageName != null)
+            {
+                string folderName = this.UploadImageToFolder(editProduct.ImageName);
+                var imgPath = Path.Combine(folderName, editProduct.ExistingImageName);
+                if (System.IO.File.Exists(imgPath))
+                {
+                    System.IO.File.Delete(imgPath);
+                }
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+        private string UploadImageToFolder(IFormFile ImageFile)
+        {
+            string folderName = Path.Combine(_webHostEnvironment.WebRootPath, "images");//C:/DXC/MyProject/Images
+            string imgFilePath = Path.Combine(folderName, ImageFile.FileName);//C:/DXC/.../MyProject/Images/Roll_Bun.jpg
+            ImageFile.CopyTo(new FileStream(imgFilePath, FileMode.Create));
+
+            return folderName;
         }
     }
 }

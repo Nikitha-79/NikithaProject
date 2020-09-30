@@ -10,5 +10,7 @@ namespace NikithaProject.Repositories
     {
         IEnumerable<Product> GetProducts();
         void AddNewProduct(Product product);
+        Product GetProductById(int id);
+        int EditProduct(Product product);
     }
 }

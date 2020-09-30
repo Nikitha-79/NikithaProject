@@ -29,6 +29,28 @@ namespace NikithaProject.Repositories
             }
         }
 
+        public int EditProduct(Product product)
+        {
+            var prodfromDb = _dbContext.Products.SingleOrDefault(p => p.Id == product.Id);
+            if(prodfromDb != null)
+            {
+                prodfromDb.Name = product.Name;
+                prodfromDb.Description = product.Description;
+                prodfromDb.Price = product.Price;
+                prodfromDb.ImageName = product.ImageName;
+                return _dbContext.SaveChanges();
+            }
+            else
+            {
+                throw new NullReferenceException();
+            }
+        }
+
+        public Product GetProductById(int id)
+        {
+            return _dbContext.Products.SingleOrDefault(p => p.Id == id);
+        }
+
         public IEnumerable<Product> GetProducts()
         {
             return _dbContext.Products.ToList();

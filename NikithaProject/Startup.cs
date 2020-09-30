@@ -12,6 +12,7 @@ using NikithaProject.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NikithaProject.Repositories;
 
 namespace NikithaProject
 {
@@ -32,6 +33,9 @@ namespace NikithaProject
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddScoped<IProductRepository, ProductRepository>();
+
             services.AddControllersWithViews();
             services.AddRazorPages();
         }

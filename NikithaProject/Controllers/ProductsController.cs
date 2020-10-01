@@ -63,7 +63,8 @@ namespace NikithaProject.Controllers
             var product = _productRepository.GetProductById(id.Value);
             if(product == null)
             {
-                return NotFound();
+                return View("ProductNotFound");
+                //return NotFound();
             }
             EditProductViewModel editProduct = new EditProductViewModel()
             {
